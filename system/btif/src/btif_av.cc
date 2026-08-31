@@ -3114,17 +3114,18 @@ static void btif_av_query_mandatory_codec_priority(const RawAddress& peer_addres
     }
     btav_source_callbacks_t* callbacks = btif_av_source.Callbacks();
     bool preferred = callbacks != nullptr && callbacks->mandatory_codec_preferred_cb(peer_address);
-    if (preferred) {
-      auto apply_priority = [](const RawAddress& peer_address, bool preferred) {
-        BtifAvPeer* peer = btif_av_find_peer(peer_address, A2dpType::kSource);
-        if (peer == nullptr) {
-          log::warn("btif_av_query_mandatory_codec_priority: peer is null");
-          return;
-        }
-        peer->SetMandatoryCodecPreferred(preferred);
-      };
-      do_in_main_thread(base::BindOnce(apply_priority, peer_address, preferred));
-    }
+    auto apply_priority = [](const RawAddress& peer_address, bool preferred) {
+      BtifAvPeer* peer = btif_av_find_peer(peer_address, A2dpType::kSource);
+      if (peer == nullptr) {
+        log::warn("btif_av_query_mandatory_codec_priority: peer is null");
+        return;
+      }
+      if (btif_av_source.GetPeersCount() >= 2) {
+        preferred = true;
+      }
+      peer->SetMandatoryCodecPreferred(preferred);
+    };
+    do_in_main_thread(base::BindOnce(apply_priority, peer_address, preferred));
   };
   if (btif_av_source.Enabled()) {
     do_in_jni_thread(base::BindOnce(query_priority, peer_address));

@@ -78,6 +78,7 @@
 #include "stack/include/hci_error_code.h"
 #include "stack/include/hcidefs.h"
 #include "stack/include/l2cap_interface.h"
+#include "stack/include/l2cap_av_interface.h"
 #include "stack/include/l2cap_types.h"
 #include "stack/include/sdpdefs.h"
 #include "storage/config_keys.h"
@@ -3048,6 +3049,21 @@ static void offload_vendor_callback(tBTM_VSC_CMPL* param) {
       (*bta_av_cb.p_cback)(BTA_AV_OFFLOAD_START_RSP_EVT, &value);
     }
   }
+}
+
+/*
+ * How many ACL buffers should be reserved for A2DP offload
+ * Recommend ~30–40% of total controller ACL buffers (e.g. 8 total -> 2–3).
+ */
+#define COEX_BUFFER_COUNT_MIN 0
+#define COEX_BUFFER_COUNT_MAX 10
+#define COEX_BUFFER_COUNT_DEFAULT 5
+static uint16_t bta_av_get_coex_buffer_count() {
+  int val = osi_property_get_int32(
+      "persist.bluetooth.a2dp_offload.coex_buf_count",
+      COEX_BUFFER_COUNT_DEFAULT);
+  val = std::clamp(val, COEX_BUFFER_COUNT_MIN, COEX_BUFFER_COUNT_MAX);
+  return static_cast<uint16_t>(val);
 }
 
 static void bta_av_vendor_offload_start(tBTA_AV_SCB* p_scb, tBT_A2DP_OFFLOAD* offload_start) {
