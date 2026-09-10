@@ -754,6 +754,7 @@ void l2c_pin_code_request(const RawAddress& bd_addr) {
     alarm_set_on_mloop(p_lcb->l2c_lcb_timer, L2CAP_LINK_CONNECT_EXT_TIMEOUT_MS,
                        l2c_lcb_timer_timeout, p_lcb);
   }
+}
 
 /*******************************************************************************
  *
@@ -795,8 +796,6 @@ void l2c_link_set_br_coex_buf_cap(uint16_t bufs_to_disable, tL2C_COEX_READY cb) 
   if (pending_acks <= new_bufs_count) {
     std::move(cb).Run(/* success= */ true);
   }
-}
-
 }
 
 /*******************************************************************************

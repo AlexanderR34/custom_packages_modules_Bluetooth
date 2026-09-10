@@ -3113,7 +3113,8 @@ static void btif_av_query_mandatory_codec_priority(const RawAddress& peer_addres
       return;
     }
     btav_source_callbacks_t* callbacks = btif_av_source.Callbacks();
-    bool preferred = callbacks != nullptr && callbacks->mandatory_codec_preferred_cb(peer_address);
+    bool preferred = callbacks != nullptr && callbacks->mandatory_codec_preferred_cb != nullptr
+        && callbacks->mandatory_codec_preferred_cb(peer_address);
     auto apply_priority = [](const RawAddress& peer_address, bool preferred) {
       BtifAvPeer* peer = btif_av_find_peer(peer_address, A2dpType::kSource);
       if (peer == nullptr) {
@@ -4224,7 +4225,7 @@ void btif_av_source_metadata_changed(btav_a2dp_codec_audio_context_t audio_conte
 
   btif_av_set_latency_req_t set_latency_req = {
           .is_low_latency = audio_context == BTAV_A2DP_CODEC_AUDIO_CONTEXT_GAME,
-          .reconfigure_codec = true,
+          .reconfigure_codec = false,
   };
 
   BtifAvEvent btif_av_event(BTIF_AV_SET_LATENCY_REQ_EVT, &set_latency_req, sizeof(set_latency_req));
