@@ -353,6 +353,17 @@ class A2dpStreamCallbacks : public bluetooth::audio::a2dp::StreamCallbacks {
       return Status::SUCCESS;
     }
 
+    // If stream is in started state but has local suspend pending, cancel suspend and continue streaming
+    BtifAvPeer* peer = btif_av_find_active_peer(A2dpType::kSource);
+    if (peer != nullptr && peer->StateMachine().StateId() == BtifAvStateMachine::kStateStarted) {
+      if (peer->CheckFlags(BtifAvPeer::kFlagLocalSuspendPending)) {
+        log::info("Stream in started state with local suspend pending, overriding suspend for new audio request");
+        peer->ClearFlags(BtifAvPeer::kFlagLocalSuspendPending);
+        btif_a2dp_source_set_tx_flush(false);
+        return Status::SUCCESS;
+      }
+    }
+
     // Check if the stream is ready to start.
     if (!btif_av_stream_ready(A2dpType::kSource)) {
       log::error("unable to start stream: not ready");

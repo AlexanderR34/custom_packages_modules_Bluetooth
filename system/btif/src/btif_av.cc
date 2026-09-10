@@ -3871,7 +3871,8 @@ bool btif_av_stream_ready(const A2dpType local_a2dp_type) {
     return false;
   }
 
-  return state == BtifAvStateMachine::kStateOpened;
+  return state == BtifAvStateMachine::kStateOpened ||
+         state == BtifAvStateMachine::kStateStarted;
 }
 
 bool btif_av_stream_started_ready(const A2dpType local_a2dp_type) {
