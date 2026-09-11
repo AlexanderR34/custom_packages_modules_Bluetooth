@@ -81,6 +81,18 @@ struct btif_av_clear_remote_suspend_flag {
 };
 extern struct btif_av_clear_remote_suspend_flag btif_av_clear_remote_suspend_flag;
 
+// Name: btif_av_clear_local_suspend_flag_if_started
+// Params: const A2dpType local_a2dp_type.
+// Return: bool
+struct btif_av_clear_local_suspend_flag_if_started {
+  static bool return_value;
+  std::function<bool(const A2dpType local_a2dp_type)> body{
+          [](const A2dpType /* local_a2dp_type */) { return return_value; }};
+  bool operator()(const A2dpType local_a2dp_type) { return body(local_a2dp_type); }
+};
+extern struct btif_av_clear_local_suspend_flag_if_started btif_av_clear_local_suspend_flag_if_started;
+
+
 // Name: btif_av_find_by_handle
 // Params: tBTA_AV_HNDL bta_handle
 // Return: const RawAddress&

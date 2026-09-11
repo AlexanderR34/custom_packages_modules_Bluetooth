@@ -41,7 +41,9 @@ namespace btif_av {
 // Function state capture and return values, if needed
 struct btif_av_acl_disconnected btif_av_acl_disconnected;
 struct btif_av_clear_remote_suspend_flag btif_av_clear_remote_suspend_flag;
+struct btif_av_clear_local_suspend_flag_if_started btif_av_clear_local_suspend_flag_if_started;
 struct btif_av_find_by_handle btif_av_find_by_handle;
+
 struct btif_av_get_audio_delay btif_av_get_audio_delay;
 struct btif_av_get_peer_sep btif_av_get_peer_sep;
 struct btif_av_is_a2dp_offload_enabled btif_av_is_a2dp_offload_enabled;
@@ -109,6 +111,7 @@ BtStatus btif_av_source_execute_service::return_value = BtifStatus();
 bool btif_av_src_sink_coexist_enabled::return_value = false;
 bool btif_av_stream_ready::return_value = false;
 bool btif_av_stream_started_ready::return_value = false;
+bool btif_av_clear_local_suspend_flag_if_started::return_value = false;
 
 }  // namespace btif_av
 }  // namespace mock
@@ -123,6 +126,11 @@ void btif_av_clear_remote_suspend_flag(const A2dpType local_a2dp_type) {
   inc_func_call_count(__func__);
   test::mock::btif_av::btif_av_clear_remote_suspend_flag(local_a2dp_type);
 }
+bool btif_av_clear_local_suspend_flag_if_started(const A2dpType local_a2dp_type) {
+  inc_func_call_count(__func__);
+  return test::mock::btif_av::btif_av_clear_local_suspend_flag_if_started(local_a2dp_type);
+}
+
 const RawAddress& btif_av_find_by_handle(tBTA_AV_HNDL bta_handle) {
   inc_func_call_count(__func__);
   return test::mock::btif_av::btif_av_find_by_handle(bta_handle);

@@ -641,7 +641,8 @@ struct tL2C_CB {
   uint16_t num_lm_acl_bufs; /* # of ACL buffers on controller */
   uint16_t full_num_lm_acl_bufs; /* # of ACL buffers on controller, not substracting buffers needed for A2DP offload coex on MTK */
   uint16_t pending_acks_until_coex_cb;
-  tL2C_COEX_READY coex_cb;    /* Idle timeout */
+  tL2C_COEX_READY coex_cb;
+  uint16_t idle_timeout; /* Idle timeout */
 
   tL2C_LCB* p_cur_hcit_lcb; /* Current HCI Transport buffer */
   uint16_t num_used_lcbs;   /* Number of active link control blocks */

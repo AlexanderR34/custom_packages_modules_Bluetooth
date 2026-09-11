@@ -3058,13 +3058,14 @@ static void offload_vendor_callback(tBTM_VSC_CMPL* param) {
 #define COEX_BUFFER_COUNT_MIN 0
 #define COEX_BUFFER_COUNT_MAX 10
 #define COEX_BUFFER_COUNT_DEFAULT 5
-static uint16_t bta_av_get_coex_buffer_count() {
+[[maybe_unused]] static uint16_t bta_av_get_coex_buffer_count() {
   int val = osi_property_get_int32(
       "persist.bluetooth.a2dp_offload.coex_buf_count",
       COEX_BUFFER_COUNT_DEFAULT);
   val = std::clamp(val, COEX_BUFFER_COUNT_MIN, COEX_BUFFER_COUNT_MAX);
   return static_cast<uint16_t>(val);
 }
+
 
 static void bta_av_vendor_offload_start(tBTA_AV_SCB* p_scb, tBT_A2DP_OFFLOAD* offload_start) {
   uint8_t param[sizeof(tBT_A2DP_OFFLOAD)];

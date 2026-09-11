@@ -204,6 +204,13 @@ uint8_t btif_av_get_peer_sep(const A2dpType local_a2dp_type);
 void btif_av_clear_remote_suspend_flag(const A2dpType local_a2dp_type);
 
 /**
+ * Clear the local suspended flag for the active peer if started.
+ * @param local_a2dp_type type of local a2dp profile.
+ */
+bool btif_av_clear_local_suspend_flag_if_started(const A2dpType local_a2dp_type);
+
+
+/**
  * Check whether the connected A2DP peer supports EDR.
  *
  * The value can be provided only if the remote peer is connected.

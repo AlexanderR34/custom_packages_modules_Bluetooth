@@ -4029,6 +4029,19 @@ void btif_av_clear_remote_suspend_flag(const A2dpType local_a2dp_type) {
   do_in_main_thread(base::BindOnce(clear_remote_suspend_flag, local_a2dp_type));
 }
 
+bool btif_av_clear_local_suspend_flag_if_started(const A2dpType local_a2dp_type) {
+  BtifAvPeer* peer = btif_av_find_active_peer(local_a2dp_type);
+  if (peer != nullptr && peer->StateMachine().StateId() == BtifAvStateMachine::kStateStarted) {
+    if (peer->CheckFlags(BtifAvPeer::kFlagLocalSuspendPending)) {
+      log::info("Stream in started state with local suspend pending, overriding suspend for new audio request");
+      peer->ClearFlags(BtifAvPeer::kFlagLocalSuspendPending);
+      return true;
+    }
+  }
+  return false;
+}
+
+
 bool btif_av_is_peer_edr(const RawAddress& peer_address, const A2dpType local_a2dp_type) {
   BtifAvPeer* peer = btif_av_find_peer(peer_address, local_a2dp_type);
   if (peer == nullptr) {
